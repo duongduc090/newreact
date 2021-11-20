@@ -1,0 +1,41 @@
+
+.container-fluid {
+  margin-top: 101px;
+  color: #000 !important
+}
+
+.card {
+  background-color: #F8F9FB !important
+}
+
+
+.social {
+  font-size: 21px !important
+}
+
+.color-text {
+  color: #757575 !important
+}
+
+footer {
+  color: #caced1 !important;
+  margin-top: 20px;
+}
+
+.list-unstyled li {
+  margin-top: 20px;
+  margin-bottom: 20px
+}
+
+.Careers {
+  cursor: pointer;
+  color: #1E88E5
+}
+
+.row-1 {
+  background-color: #1E242A !important
+}
+
+.row-2 {
+  background-color: #28323C !important
+}
