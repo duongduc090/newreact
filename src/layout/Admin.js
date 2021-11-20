@@ -20,7 +20,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { NavLink, useNavigate } from 'react-router-dom'
 import { signOut } from '../auth';
-import {mdTheme, AppBar, stringAvatar, Drawer} from '../ultis/compAdminLayout';
+import {mdTheme, AppBar, stringAvatar, Drawer} from '../utils/compAdminLayout';
 
 function Copyright(props) {
   return (
