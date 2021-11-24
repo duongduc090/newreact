@@ -51,7 +51,7 @@
 .custom-toggle-button:not(:last-child){
   margin-right: 15px!important;
 }
-.Mui-selected {
+.MuiToggleButtonGroup-root .Mui-selected {
   background-color: black!important;
   color: white!important;
 }

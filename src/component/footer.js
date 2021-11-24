@@ -3,6 +3,7 @@ import './footer.css'
 const Footer = () => {
     return (
         <>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" /> 
                 <footer >
                     <div className="row justify-content-center mb-0 pt-5 pb-0 row-2 px-3">
                         <div className="col-12">

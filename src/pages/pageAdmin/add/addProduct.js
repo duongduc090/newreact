@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { NavLink } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -39,6 +40,7 @@ export default function AddProduct({onAdd, categories}) {
         formData.append('quantity', data.quantity);
         formData.append('shipping', data.shipping);
         formData.append('description', data.description);
+        formData.append('status', data.status);
     
         onAdd(formData, user._id, token);
     }
@@ -111,7 +113,7 @@ export default function AddProduct({onAdd, categories}) {
                         />
                         <FormControl component="fieldset" margin="normal">
                             <FormLabel component="legend">Shipping</FormLabel>
-                            <RadioGroup row aria-label="shipping" name="shipping" >
+                            <RadioGroup row aria-label="shipping" name="shipping" defaultValue="0">
                                 <FormControlLabel value="1" control={<Radio />} label="Yes" autoComplete="1" {...register('shipping')} />
                                 <FormControlLabel value="0" control={<Radio />} label="No" autoComplete="0" {...register('shipping')}/>
                             </RadioGroup>
@@ -125,6 +127,13 @@ export default function AddProduct({onAdd, categories}) {
                             autoComplete="description"
                             {...register('description')}
                         />
+                        <FormControl component="fieldset" margin="normal">
+                            <FormLabel component="legend">Publish</FormLabel>
+                            <RadioGroup row aria-label="publish" name="publish" defaultValue="0">
+                                <FormControlLabel value="1" control={<Radio />} label="Yes" autoComplete="1" {...register('status')} />
+                                <FormControlLabel value="0" control={<Radio />} label="No" autoComplete="0" {...register('status')}/>
+                            </RadioGroup>
+                        </FormControl>
                         <Button
                             type="submit"
                             fullWidth
@@ -133,7 +142,11 @@ export default function AddProduct({onAdd, categories}) {
                         >
                             Add
                         </Button>
-
+                        <NavLink to="/admin/products" style={{ textDecoration: 'none' }}>
+                            <Button variant="contained" fullWidth  style={{ marginBottom: 10 }}>
+                                List
+                            </Button>
+                        </NavLink>
                     </Box>
                 </Box>
             </Container>

@@ -28,12 +28,12 @@ export const mainListItems = (
             <ListItemText primary="Orders" />
         </ListItem>
     </NavLink>
-    <NavLink to="/admin/customers" style={{ textDecoration: 'none', color: '#424242'}}>
+    <NavLink to="/admin/users" style={{ textDecoration: 'none', color: '#424242'}}>
         <ListItem button>
             <ListItemIcon>
                 <PeopleIcon />
             </ListItemIcon>
-            <ListItemText primary="Customers" />
+            <ListItemText primary="Users" />
         </ListItem>
     </NavLink>
     <NavLink to="/admin/products" style={{ textDecoration: 'none', color: '#424242'}}>

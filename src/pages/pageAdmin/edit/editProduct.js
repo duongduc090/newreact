@@ -15,15 +15,17 @@ import { useForm } from 'react-hook-form'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import NativeSelect from '@mui/material/NativeSelect';
 import { useParams } from 'react-router';
 import productAPI from '../../../api/productApi';
+import { NavLink } from 'react-router-dom';
 
 const theme = createTheme();
 
 export default function EditProduct({editProduct, categories}) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [cate, setCate] = useState('');
+    const [shipping, setShipping] = useState('');
+    const [status, setStatus] = useState('');
     const { id } = useParams();
     const [product, setProduct] = useState({})
 
@@ -34,16 +36,25 @@ export default function EditProduct({editProduct, categories}) {
                 setProduct(data);
                 reset(data);
                 setCate(data.category)
+                let ship = data.shipping ? 1 : 0;
+                setShipping(ship);
+                let state = data.status ? 1 : 0;
+                setStatus(state)
             } catch (error) {
             }
         }
         getProduct();
-    }, [reset])
+    }, [reset, id])
 
     const handleChange = (event) => {
         setCate(event.target.value);
     };
-
+    const handleChange2 = (event) => {
+        setShipping(event.target.value);
+    };
+    const handleChange3 = (event) => {
+        setStatus(event.target.value);
+    };
     const onHandleSubmit = (data) => {
 
         const { token, user } = JSON.parse(localStorage.getItem('auth'));
@@ -59,6 +70,7 @@ export default function EditProduct({editProduct, categories}) {
         formData.append('quantity', data.quantity);
         formData.append('shipping', data.shipping);
         formData.append('description', data.description);
+        formData.append('status', data.status);
     
         editProduct(id, formData, user._id, token);
     }
@@ -77,15 +89,15 @@ export default function EditProduct({editProduct, categories}) {
                     <Typography component="h1" variant="h5">
                         Edit product
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit(onHandleSubmit)} sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit(onHandleSubmit)} sx={{ mt: 1 }} autoComplete='off'>
                         <TextField
                             margin="normal"
                             fullWidth
                             id="name"
                             label="Name Product"
                             name="name"
-                            autoComplete="name"
                             autoFocus
+                            defaultValue={product.name}
                             {...register('name')}
                         />
                         <TextField
@@ -94,7 +106,7 @@ export default function EditProduct({editProduct, categories}) {
                             id="price"
                             label="Price"
                             name="price"
-                            autoComplete="price"
+                            defaultValue={product.price}
                             {...register('price')}
                         />
                         <TextField
@@ -103,23 +115,21 @@ export default function EditProduct({editProduct, categories}) {
                             id="photo"
                             type='file'
                             name="photo"
-                            autoComplete="photo"
                             {...register('photo')}
                         />
                         <FormControl fullWidth margin="normal">
                             <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                            <NativeSelect
+                            <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={cate}
                                 label="Category"
-                                defaultValue={product.category}
                                 onChange={handleChange}
                             >
                                 {categories.map((item,index) => {
-                                    return <><option value={item._id} key={index} >{item.name}</option> </>
+                                    return <MenuItem value={item._id} key={index}>{item.name}</MenuItem>
                                 })}
-                            </NativeSelect>
+                            </Select>
                         </FormControl>
                         <TextField
                             margin="normal"
@@ -127,12 +137,12 @@ export default function EditProduct({editProduct, categories}) {
                             id="quantity"
                             label="Quantity"
                             name="quantity"
-                            autoComplete="quantity"
+                            defaultValue={product.quantity}
                             {...register('quantity')}
                         />
                         <FormControl component="fieldset" margin="normal">
                             <FormLabel component="legend">Shipping</FormLabel>
-                            <RadioGroup row aria-label="shipping" name="row-radio-buttons-group" defaultValue={product.shipping ? 1 : 0} >
+                            <RadioGroup row aria-label="shipping" name="row-radio-buttons-group"  value={shipping}  onChange={handleChange2}>
                                 <FormControlLabel value="1" control={<Radio />} label="Yes" autoComplete="1" {...register('shipping')} />
                                 <FormControlLabel value="0" control={<Radio />} label="No" autoComplete="0" {...register('shipping')} />
                             </RadioGroup>
@@ -143,9 +153,16 @@ export default function EditProduct({editProduct, categories}) {
                             id="description"
                             label="Description"
                             name="description"
-                            autoComplete="description"
+                            defaultValue={product.description}
                             {...register('description')}
                         />
+                        <FormControl component="fieldset" margin="normal">
+                            <FormLabel component="legend">Publish</FormLabel>
+                            <RadioGroup row aria-label="publish" name="publish" value={status}  onChange={handleChange3}>
+                                <FormControlLabel value="1" control={<Radio />} label="Yes" autoComplete="1" {...register('status')} />
+                                <FormControlLabel value="0" control={<Radio />} label="No" autoComplete="0" {...register('status')}/>
+                            </RadioGroup>
+                        </FormControl>
                         <Button
                             type="submit"
                             fullWidth
@@ -154,7 +171,11 @@ export default function EditProduct({editProduct, categories}) {
                         >
                             Update
                         </Button>
-
+                        <NavLink to="/admin/products" style={{ textDecoration: 'none' }}>
+                            <Button variant="contained" fullWidth  style={{ marginBottom: 10 }}>
+                                List
+                            </Button>
+                        </NavLink>
                     </Box>
                 </Box>
             </Container>

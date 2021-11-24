@@ -21,7 +21,6 @@ export default function SignUp() {
   const {register, handleSubmit, formState: {errors} } = useForm();
 
   const onSubmit = (data) => {
-    
     signUp(data)
   };
 
@@ -88,6 +87,17 @@ export default function SignUp() {
                   name="email"
                   autoComplete="email"
                   {...register('email')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phone"
+                  label="Phone"
+                  name="phone"
+                  autoComplete="phone"
+                  {...register('phone')}
                 />
               </Grid>
               <Grid item xs={12}>

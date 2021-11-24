@@ -9,7 +9,6 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -21,19 +20,6 @@ import MenuItem from '@mui/material/MenuItem';
 import { NavLink, useNavigate } from 'react-router-dom'
 import { signOut } from '../auth';
 import {mdTheme, AppBar, stringAvatar, Drawer} from '../utils/compAdminLayout';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="#">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 
 function DashboardContent() {
@@ -137,7 +123,6 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Outlet />
-            <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
       </Box>

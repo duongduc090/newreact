@@ -20,12 +20,12 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { IconButton, Stack } from '@mui/material';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ReportIcon from '@mui/icons-material/Report';
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '@mui/material/Tooltip';
 import {StyledTableCell, Img} from '../../utils/styles'
 
-export default function Products(props) {
+export default function Customers(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -35,9 +35,9 @@ export default function Products(props) {
         setValue(newValue);
     };
     
-    const list = props.productList;
-    const list1 = props.productList.filter(item => item.status == 1);
-    const list2 = props.productList.filter(item => item.status == 0);
+    const list = props.userList;
+    const list1 = props.userList.filter(item => item.role == 1);
+    const list2 = props.userList.filter(item => item.role == 0);
 
     const { token, user } = JSON.parse(localStorage.getItem('auth'));
 
@@ -57,8 +57,8 @@ export default function Products(props) {
     return (
         <>
             <Grid container alignItems="center" justifyContent="space-between" sx={{ mb: '15px' }}>
-                <Typography variant='h4'>Products</Typography>
-                <NavLink to="/admin/product/add" style={{ textDecoration: 'none' }}>
+                <Typography variant='h4'>Users</Typography>
+                <NavLink to="/admin/customer/add" style={{ textDecoration: 'none' }}>
                     <Button variant="contained" startIcon={<>+</>} style={{ marginBottom: 10 }}>
                         Add
                     </Button>
@@ -68,9 +68,9 @@ export default function Products(props) {
                 <Box sx={{ borderBottom: 1, borderTop: 1, borderLeft: 1, borderRight: 1, borderColor: 'divider', borderTopLeftRadius: '5px', borderTopRightRadius: '5px' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="All" value="1" />
-                        <Tab label="Published" value="2" />
-                        <Tab label="Draft" value="3" />
-                    </TabList>
+                        <Tab label="Admin" value="2" />
+                        <Tab label="Customer" value="3" />
+                    </TabList>  
                 </Box>
                 <TabPanel value="1" sx={{ p: '0' }}>
                     <TableContainer component={Paper} >
@@ -79,9 +79,8 @@ export default function Products(props) {
                                 <TableRow>
                                     <StyledTableCell align="center">ID</StyledTableCell>
                                     <StyledTableCell align="left">Name</StyledTableCell>
-                                    <StyledTableCell align="left">Price&nbsp;($)</StyledTableCell>
-                                    <StyledTableCell align="left">Quantity</StyledTableCell>
-                                    <StyledTableCell align="left">Status</StyledTableCell>
+                                    <StyledTableCell align="left">Phone</StyledTableCell>
+                                    <StyledTableCell align="left">Email</StyledTableCell>
                                     <StyledTableCell align="left"></StyledTableCell>
                                 </TableRow>
                             </TableHead>
@@ -97,46 +96,39 @@ export default function Products(props) {
                                         <TableCell component="th" scope="row">
                                             <Grid container spacing={2} alignItems="center">
                                                 <Grid item>
-                                                    <Img alt="complex" sx={{ width: 70, height: 70, borderRadius: '10px' }} src={`http://localhost:4000/api/product/photo/${list._id}`} />
+                                                    {/* <Img alt="user" sx={{ width: 50, height: 50, borderRadius: '10px' }} src={`http://localhost:4000/api/user/photo/${list._id}`} /> */}
                                                 </Grid>
                                                 <Grid item xs={12} sm container>
-                                                    <Grid item xs container direction="column" spacing={2}>
-                                                        <Grid item xs>
-                                                            <Typography variant="subtitle2" gutterBottom>
-                                                                {list.name}
-                                                            </Typography>
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                Sold out: {list.sold}
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
+                                                    <Typography variant="subtitle2" gutterBottom>
+                                                        {list.name}
+                                                    </Typography>
                                                 </Grid>
                                             </Grid>
                                         </TableCell>
                                         <TableCell style={{ width: 120 }} align="left">
-                                            {list.price}
+                                            {list.phone}
                                         </TableCell>
                                         <TableCell style={{ width: 120 }} align="left">
-                                            {list.quantity}
+                                            {list.email}
                                         </TableCell>
-                                        <TableCell style={{ width: 120 }} align="left" >
+                                        {/* <TableCell style={{ width: 120 }} align="left" >
                                             <Stack direction="row" alignItems="center" spacing={1} sx={() => { if (list.status == 1) { return { color: 'rgb(39, 171, 110)' } } else { return { color: 'rgb(217, 130, 43)' } } }}>
                                                 <FiberManualRecordIcon sx={{ fontSize: 12 }} />
                                                 <Typography>{list.status ? 'Published' : 'Draft'}</Typography>
                                             </Stack>
-                                        </TableCell>
+                                        </TableCell> */}
                                         <TableCell style={{ width: 80 }} align="right">
                                             <Stack alignItems="center" direction="row">
                                                 <Tooltip title="Edit">
-                                                    <NavLink to={`/admin/product/${list._id}/edit`}>
+                                                    <NavLink to={`/admin/customer/${list._id}/edit`}>
                                                         <IconButton>
                                                             <EditIcon fontSize='small' />
                                                         </IconButton>
                                                     </NavLink>
                                                 </Tooltip>
-                                                <Tooltip title="Delete">
-                                                    <IconButton onClick={() => props.onDelete(list._id, user._id, token)}>
-                                                        <DeleteForeverIcon />
+                                                <Tooltip title="Report">
+                                                    <IconButton >
+                                                        <ReportIcon />
                                                     </IconButton>
                                                 </Tooltip>
                                             </Stack>
@@ -146,7 +138,7 @@ export default function Products(props) {
 
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: 53 * emptyRows }}>
-                                        <TableCell colSpan={6} />
+                                        <TableCell colSpan={5} />
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -154,7 +146,7 @@ export default function Products(props) {
                                 <TableRow>
                                     <TablePagination
                                         rowsPerPageOptions={[10, 15, 20, 25, { label: 'All', value: -1 }]}
-                                        colSpan={6}
+                                        colSpan={5}
                                         count={list.length}
                                         rowsPerPage={rowsPerPage}
                                         page={page}
@@ -180,9 +172,8 @@ export default function Products(props) {
                                 <TableRow>
                                     <StyledTableCell align="center">ID</StyledTableCell>
                                     <StyledTableCell align="left">Name</StyledTableCell>
-                                    <StyledTableCell align="left">Price&nbsp;($)</StyledTableCell>
-                                    <StyledTableCell align="left">Quantity</StyledTableCell>
-                                    <StyledTableCell align="left">Status</StyledTableCell>
+                                    <StyledTableCell align="left">Phone</StyledTableCell>
+                                    <StyledTableCell align="left">Email</StyledTableCell>
                                     <StyledTableCell align="left"></StyledTableCell>
                                 </TableRow>
                             </TableHead>
@@ -217,9 +208,6 @@ export default function Products(props) {
                                         <TableCell style={{ width: 120 }} align="left">
                                             {list.price}
                                         </TableCell>
-                                        <TableCell style={{ width: 120 }} align="left">
-                                            {list.quantity}
-                                        </TableCell>
                                         <TableCell style={{ width: 120 }} align="left" >
                                             <Stack direction="row" alignItems="center" spacing={1} sx={() => { if (list.status == 1) { return { color: 'rgb(39, 171, 110)' } } else { return { color: 'rgb(217, 130, 43)' } } }}>
                                                 <FiberManualRecordIcon sx={{ fontSize: 12 }} />
@@ -229,15 +217,15 @@ export default function Products(props) {
                                         <TableCell style={{ width: 80 }} align="right">
                                             <Stack alignItems="center" direction="row">
                                                 <Tooltip title="Edit">
-                                                    <NavLink to={`/admin/product/${list._id}/edit`}>
+                                                    <NavLink to={`/admin/customer/${list._id}/edit`}>
                                                         <IconButton>
                                                             <EditIcon fontSize='small' />
                                                         </IconButton>
                                                     </NavLink>
                                                 </Tooltip>
-                                                <Tooltip title="Delete">
-                                                    <IconButton onClick={() => props.onDelete(list._id, user._id, token)}>
-                                                        <DeleteForeverIcon />
+                                                <Tooltip title="Report">
+                                                    <IconButton  >
+                                                        <ReportIcon />
                                                     </IconButton>
                                                 </Tooltip>
                                             </Stack>
@@ -247,7 +235,7 @@ export default function Products(props) {
 
                                 {emptyRows1 > 0 && (
                                     <TableRow style={{ height: 53 * emptyRows1 }}>
-                                        <TableCell colSpan={6} />
+                                        <TableCell colSpan={5} />
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -255,7 +243,7 @@ export default function Products(props) {
                                 <TableRow>
                                     <TablePagination
                                         rowsPerPageOptions={[10, 15, 20, 25, { label: 'All', value: -1 }]}
-                                        colSpan={6}
+                                        colSpan={5}
                                         count={list1.length}
                                         rowsPerPage={rowsPerPage}
                                         page={page}
@@ -281,9 +269,8 @@ export default function Products(props) {
                                 <TableRow>
                                     <StyledTableCell align="center">ID</StyledTableCell>
                                     <StyledTableCell align="left">Name</StyledTableCell>
-                                    <StyledTableCell align="left">Price&nbsp;($)</StyledTableCell>
-                                    <StyledTableCell align="left">Quantity</StyledTableCell>
-                                    <StyledTableCell align="left">Status</StyledTableCell>
+                                    <StyledTableCell align="left">Phone</StyledTableCell>
+                                    <StyledTableCell align="left">Email</StyledTableCell>
                                     <StyledTableCell align="left"></StyledTableCell>
                                 </TableRow>
                             </TableHead>
@@ -318,9 +305,6 @@ export default function Products(props) {
                                         <TableCell style={{ width: 120 }} align="left">
                                             {list.price}
                                         </TableCell>
-                                        <TableCell style={{ width: 120 }} align="left">
-                                            {list.quantity}
-                                        </TableCell>
                                         <TableCell style={{ width: 120 }} align="left" >
                                             <Stack direction="row" alignItems="center" spacing={1} sx={() => { if (list.status == 1) { return { color: 'rgb(39, 171, 110)' } } else { return { color: 'rgb(217, 130, 43)' } } }}>
                                                 <FiberManualRecordIcon sx={{ fontSize: 12 }} />
@@ -330,15 +314,15 @@ export default function Products(props) {
                                         <TableCell style={{ width: 80 }} align="right">
                                             <Stack alignItems="center" direction="row">
                                                 <Tooltip title="Edit">
-                                                    <NavLink to={`/admin/product/${list._id}/edit`}>
+                                                    <NavLink to={`/admin/customer/${list._id}/edit`}>
                                                         <IconButton>
                                                             <EditIcon fontSize='small' />
                                                         </IconButton>
                                                     </NavLink>
                                                 </Tooltip>
-                                                <Tooltip title="Delete">
-                                                    <IconButton onClick={() => props.onDelete(list._id, user._id, token)}>
-                                                        <DeleteForeverIcon />
+                                                <Tooltip title="Report">
+                                                    <IconButton >
+                                                        <ReportIcon />
                                                     </IconButton>
                                                 </Tooltip>
                                             </Stack>
@@ -348,7 +332,7 @@ export default function Products(props) {
 
                                 {emptyRows2 > 0 && (
                                     <TableRow style={{ height: 53 * emptyRows2 }}>
-                                        <TableCell colSpan={6} />
+                                        <TableCell colSpan={5} />
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -356,7 +340,7 @@ export default function Products(props) {
                                 <TableRow>
                                     <TablePagination
                                         rowsPerPageOptions={[10, 15, 20, 25, { label: 'All', value: -1 }]}
-                                        colSpan={6}
+                                        colSpan={5}
                                         count={list2.length}
                                         rowsPerPage={rowsPerPage}
                                         page={page}
@@ -376,7 +360,6 @@ export default function Products(props) {
                     </TableContainer>
                 </TabPanel>
             </TabContext>
-
         </>
     );
 }

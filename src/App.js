@@ -4,12 +4,14 @@ import './App.css';
 import Routers from './Router';
 import productApi from './api/productApi';
 import categoryApi from './api/categoryApi';
+import userApi from './api/userApi';
 import axios from 'axios'
 
 function App() {
   const [products, setProduct] = useState([]);
   const [categories, setCategory] = useState([]);
   const [contact, setContact] = useState([]);
+  const [users, setUser] = useState([]);
 
   useEffect(() => {
     const getTodos = async () => {
@@ -40,6 +42,16 @@ function App() {
       }
     }
     getTodos3();
+    const getTodos4 = async () => {
+    const { token, user } = JSON.parse(localStorage.getItem('auth'));
+      try {
+        const { data: userdata } = await userApi.getAll(user._id,token);
+        setUser(userdata.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getTodos4();
   }, [])
 
   const onHandleAdd = async (product, id, token) => {
@@ -119,7 +131,8 @@ function App() {
   return (
     <div className="App">
       <Routers productList={products} onAdd={onHandleAdd} onAdd2={onHandleAdd2} categories={categories}
-      editCate={onHandleUpdate2} editProduct={onHandleUpdate} onDelete2={onHandleDelete2} onDelete={onHandleDelete}/>
+      editCate={onHandleUpdate2} editProduct={onHandleUpdate} onDelete2={onHandleDelete2} onDelete={onHandleDelete}
+      userList={users}/>
     </div>
   );
 }
