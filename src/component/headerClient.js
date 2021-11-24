@@ -27,7 +27,8 @@ const HeaderClient = () => {
             <Container maxWidth="xl" >
                 <Box sx={{
                     bgcolor: 'background.paper',
-                    p: 1.5
+                    p: 1.5,
+                    height: '60px'
                 }}>
                     <Grid container spacing={3} >
                         <Grid item xs={2}>

@@ -19,6 +19,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { StyledMenu } from '../../utils/StyleMenu';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Box from '@mui/material/Box';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -34,13 +39,18 @@ export default function Products(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
+    // const [anchorEl, setAnchorEl] = React.useState(null);
+    // const open = Boolean(anchorEl);
+    // const handleClick = (event) => {
+    //     setAnchorEl(event.currentTarget);
+    // };
+    // const handleClose = () => {
+    //     setAnchorEl(null);
+    // };
+    const [value, setValue] = React.useState('1');
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
     };
 
     const list = props.productList;
@@ -65,45 +75,54 @@ export default function Products(props) {
                     ADD
                 </Button>
             </NavLink>
-            <TableContainer component={Paper} >
-                <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                    <TableHead>
-                        <TableRow>
-                            <StyledTableCell align="center">ID</StyledTableCell>
-                            <StyledTableCell align="left">Name</StyledTableCell>
-                            <StyledTableCell align="left">Price&nbsp;($)</StyledTableCell>
-                            <StyledTableCell align="left">Quantity</StyledTableCell>
-                            <StyledTableCell align="left"></StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {(rowsPerPage > 0
-                            ? list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : list
-                        ).map((list, index) => (
-                            <TableRow key={index}>
-                                <TableCell style={{ width: 60 }} align="left">
-                                    {index + 1}
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                    {list.name}
-                                </TableCell>
-                                <TableCell style={{ width: 160 }} align="left">
-                                    {list.price}
-                                </TableCell>
-                                <TableCell style={{ width: 160 }} align="left">
-                                    {list.quantity}
-                                </TableCell>
-                                <TableCell style={{ width: 80 }} align="right">
-                                    <NavLink to={`/admin/product/${list._id}/edit`} style={{textDecoration: 'none', color: '#000000de'}}> 
-                                        <Button>
-                                            Edit
-                                        </Button>
-                                    </NavLink>
-                                    <Button onClick={() => props.onDelete(list._id, user._id, token)}> 
-                                        Delete
-                                    </Button>
-                                    {/* <IconButton
+            <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                        <Tab label="All" value="1" />
+                        <Tab label="Published" value="2" />
+                        <Tab label="Draft" value="3" />
+                    </TabList>
+                </Box>
+                <TabPanel value="1" sx={{p:'0'}}>
+                    <TableContainer component={Paper} >
+                        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align="center">ID</StyledTableCell>
+                                    <StyledTableCell align="left">Name</StyledTableCell>
+                                    <StyledTableCell align="left">Price&nbsp;($)</StyledTableCell>
+                                    <StyledTableCell align="left">Quantity</StyledTableCell>
+                                    <StyledTableCell align="left"></StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {(rowsPerPage > 0
+                                    ? list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    : list
+                                ).map((list, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell style={{ width: 60 }} align="left">
+                                            {index + 1}
+                                        </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {list.name}
+                                        </TableCell>
+                                        <TableCell style={{ width: 160 }} align="left">
+                                            {list.price}
+                                        </TableCell>
+                                        <TableCell style={{ width: 160 }} align="left">
+                                            {list.quantity}
+                                        </TableCell>
+                                        <TableCell style={{ width: 80 }} align="right">
+                                            <NavLink to={`/admin/product/${list._id}/edit`} style={{ textDecoration: 'none', color: '#000000de' }}>
+                                                <Button>
+                                                    Edit
+                                                </Button>
+                                            </NavLink>
+                                            <Button onClick={() => props.onDelete(list._id, user._id, token)}>
+                                                Delete
+                                            </Button>
+                                            {/* <IconButton
                                         id="demo-customized-button"
                                         aria-controls="demo-customized-menu"
                                         aria-haspopup="true"
@@ -133,38 +152,245 @@ export default function Products(props) {
                                             Delete
                                         </MenuItem>
                                     </StyledMenu> */}
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
 
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[10, 15, 20, 25, { label: 'All', value: -1 }]}
-                                colSpan={5}
-                                count={list.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                SelectProps={{
-                                    inputProps: {
-                                        'aria-label': 'rows per page',
-                                    },
-                                    native: true,
-                                }}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </TableContainer>
+                                {emptyRows > 0 && (
+                                    <TableRow style={{ height: 53 * emptyRows }}>
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[10, 15, 20, 25, { label: 'All', value: -1 }]}
+                                        colSpan={5}
+                                        count={list.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        SelectProps={{
+                                            inputProps: {
+                                                'aria-label': 'rows per page',
+                                            },
+                                            native: true,
+                                        }}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActions}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
+                </TabPanel>
+                <TabPanel value="2" sx={{p:'0'}}>
+                    <TableContainer component={Paper} >
+                        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align="center">ID</StyledTableCell>
+                                    <StyledTableCell align="left">Name</StyledTableCell>
+                                    <StyledTableCell align="left">Price&nbsp;($)</StyledTableCell>
+                                    <StyledTableCell align="left">Quantity</StyledTableCell>
+                                    <StyledTableCell align="left"></StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {(rowsPerPage > 0
+                                    ? list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    : list
+                                ).map((list, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell style={{ width: 60 }} align="left">
+                                            {index + 1}
+                                        </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {list.name}
+                                        </TableCell>
+                                        <TableCell style={{ width: 160 }} align="left">
+                                            {list.price}
+                                        </TableCell>
+                                        <TableCell style={{ width: 160 }} align="left">
+                                            {list.quantity}
+                                        </TableCell>
+                                        <TableCell style={{ width: 80 }} align="right">
+                                            <NavLink to={`/admin/product/${list._id}/edit`} style={{ textDecoration: 'none', color: '#000000de' }}>
+                                                <Button>
+                                                    Edit
+                                                </Button>
+                                            </NavLink>
+                                            <Button onClick={() => props.onDelete(list._id, user._id, token)}>
+                                                Delete
+                                            </Button>
+                                            {/* <IconButton
+                                        id="demo-customized-button"
+                                        aria-controls="demo-customized-menu"
+                                        aria-haspopup="true"
+                                        aria-expanded={open ? 'true' : undefined}
+                                        variant="contained"
+                                        disableElevation
+                                        onClick={handleClick}
+                                        endIcon={<KeyboardArrowDownIcon />}
+                                    >
+                                        <MoreVertIcon />
+                                    </IconButton>
+                                    <StyledMenu
+                                        id="demo-customized-menu"
+                                        MenuListProps={{
+                                            'aria-labelledby': 'demo-customized-button',
+                                        }}
+                                        anchorEl={anchorEl}
+                                        open={open}
+                                        onClose={handleClose}
+                                    >
+                                        <MenuItem onClick={handleClose} >
+                                            <EditIcon />
+                                            Edit
+                                        </MenuItem>
+                                        <MenuItem onClick={handleClose}>
+                                            <FileCopyIcon />
+                                            Delete
+                                        </MenuItem>
+                                    </StyledMenu> */}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+
+                                {emptyRows > 0 && (
+                                    <TableRow style={{ height: 53 * emptyRows }}>
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[10, 15, 20, 25, { label: 'All', value: -1 }]}
+                                        colSpan={5}
+                                        count={list.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        SelectProps={{
+                                            inputProps: {
+                                                'aria-label': 'rows per page',
+                                            },
+                                            native: true,
+                                        }}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActions}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
+                </TabPanel>
+                <TabPanel value="3" sx={{p:'0'}}>
+                    <TableContainer component={Paper} >
+                        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align="center">ID</StyledTableCell>
+                                    <StyledTableCell align="left">Name</StyledTableCell>
+                                    <StyledTableCell align="left">Price&nbsp;($)</StyledTableCell>
+                                    <StyledTableCell align="left">Quantity</StyledTableCell>
+                                    <StyledTableCell align="left"></StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {(rowsPerPage > 0
+                                    ? list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    : list
+                                ).map((list, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell style={{ width: 60 }} align="left">
+                                            {index + 1}
+                                        </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {list.name}
+                                        </TableCell>
+                                        <TableCell style={{ width: 160 }} align="left">
+                                            {list.price}
+                                        </TableCell>
+                                        <TableCell style={{ width: 160 }} align="left">
+                                            {list.quantity}
+                                        </TableCell>
+                                        <TableCell style={{ width: 80 }} align="right">
+                                            <NavLink to={`/admin/product/${list._id}/edit`} style={{ textDecoration: 'none', color: '#000000de' }}>
+                                                <Button>
+                                                    Edit
+                                                </Button>
+                                            </NavLink>
+                                            <Button onClick={() => props.onDelete(list._id, user._id, token)}>
+                                                Delete
+                                            </Button>
+                                            {/* <IconButton
+                                        id="demo-customized-button"
+                                        aria-controls="demo-customized-menu"
+                                        aria-haspopup="true"
+                                        aria-expanded={open ? 'true' : undefined}
+                                        variant="contained"
+                                        disableElevation
+                                        onClick={handleClick}
+                                        endIcon={<KeyboardArrowDownIcon />}
+                                    >
+                                        <MoreVertIcon />
+                                    </IconButton>
+                                    <StyledMenu
+                                        id="demo-customized-menu"
+                                        MenuListProps={{
+                                            'aria-labelledby': 'demo-customized-button',
+                                        }}
+                                        anchorEl={anchorEl}
+                                        open={open}
+                                        onClose={handleClose}
+                                    >
+                                        <MenuItem onClick={handleClose} >
+                                            <EditIcon />
+                                            Edit
+                                        </MenuItem>
+                                        <MenuItem onClick={handleClose}>
+                                            <FileCopyIcon />
+                                            Delete
+                                        </MenuItem>
+                                    </StyledMenu> */}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+
+                                {emptyRows > 0 && (
+                                    <TableRow style={{ height: 53 * emptyRows }}>
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[10, 15, 20, 25, { label: 'All', value: -1 }]}
+                                        colSpan={5}
+                                        count={list.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        SelectProps={{
+                                            inputProps: {
+                                                'aria-label': 'rows per page',
+                                            },
+                                            native: true,
+                                        }}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActions}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
+                </TabPanel>
+            </TabContext>
+
         </>
     );
 }

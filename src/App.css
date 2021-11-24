@@ -62,3 +62,7 @@
 .blacka{
   color: black!important;
 }
+.MuiTableCell-head{
+  background-color: rgb(243, 244, 247)!important;
+  color:rgb(80, 97, 118)!important;
+}
