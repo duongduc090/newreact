@@ -7,20 +7,23 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm } from 'react-hook-form'
-import { NavLink } from 'react-router-dom';
-
+import { NavLink, useNavigate} from 'react-router-dom';
+import { schemaCategory } from '../../../validate/Schema';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const theme = createTheme();
 
 export default function AddCategory({ onAdd2 }) {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
+  const { register, handleSubmit, formState: { errors } } = useForm({resolver: yupResolver(schemaCategory)});
+  let navigate = useNavigate()
+  
   const onHandleSubmit = (data) => {
 
     const { token, user } = JSON.parse(localStorage.getItem('auth'));
-    console.log(token, user)
-    console.log(data)
     onAdd2(data, user._id, token);
+    setTimeout(()=> {
+      navigate('/admin/category')
+    }, 700)
   }
   return (
     <ThemeProvider theme={theme}>
@@ -40,7 +43,6 @@ export default function AddCategory({ onAdd2 }) {
           <Box component="form" onSubmit={handleSubmit(onHandleSubmit)} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
-              required
               fullWidth
               id="name"
               label="Name Category"
@@ -49,6 +51,7 @@ export default function AddCategory({ onAdd2 }) {
               autoFocus
               {...register('name')}
             />
+            <Typography variant='caption' sx={{color: 'red'}}>{errors.name?.message}</Typography>
             <Button
               type="submit"
               fullWidth

@@ -10,11 +10,13 @@ import { useForm } from 'react-hook-form'
 import CategoryAPI from '../../../api/categoryApi';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schemaCategory } from '../../../validate/Schema';
 
 const theme = createTheme();
 
 const EditCategory = ({ onHandleUpdate2 }) => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({resolver: yupResolver(schemaCategory)});
   const [category, setCategory] = useState({})
   const { id } = useParams();
   useEffect(() => {
@@ -48,7 +50,7 @@ const EditCategory = ({ onHandleUpdate2 }) => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Add category
+            Edit category
           </Typography>
           <Box component="form" onSubmit={handleSubmit(onHandleSubmit)} sx={{ mt: 1 }} autoComplete='off'>
             <TextField
@@ -63,6 +65,7 @@ const EditCategory = ({ onHandleUpdate2 }) => {
               autoFocus
               {...register('name')}
             />
+            <Typography variant='caption' sx={{color: 'red'}}>{errors.name?.message}</Typography>
             <Button
               type="submit"
               fullWidth

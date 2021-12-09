@@ -18,12 +18,14 @@ import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { IconButton, Stack } from '@mui/material';
 import ReportIcon from '@mui/icons-material/Report';
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '@mui/material/Tooltip';
 import {StyledTableCell, Img} from '../../utils/styles'
+import Avatar from '@mui/material/Avatar';
+import { stringAvatar } from '../../utils/compAdminLayout';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 export default function Customers(props) {
     const [page, setPage] = React.useState(0);
@@ -59,9 +61,7 @@ export default function Customers(props) {
             <Grid container alignItems="center" justifyContent="space-between" sx={{ mb: '15px' }}>
                 <Typography variant='h4'>Users</Typography>
                 <NavLink to="/admin/customer/add" style={{ textDecoration: 'none' }}>
-                    <Button variant="contained" startIcon={<>+</>} style={{ marginBottom: 10 }}>
-                        Add
-                    </Button>
+                    
                 </NavLink>
             </Grid>
             <TabContext value={value} style={{ border: '1px solid #ddd', backgroundColor: '#ffffff' }}>
@@ -96,27 +96,22 @@ export default function Customers(props) {
                                         <TableCell component="th" scope="row">
                                             <Grid container spacing={2} alignItems="center">
                                                 <Grid item>
-                                                    {/* <Img alt="user" sx={{ width: 50, height: 50, borderRadius: '10px' }} src={`http://localhost:4000/api/user/photo/${list._id}`} /> */}
+                                                    <Avatar {...stringAvatar(list.name)} />
                                                 </Grid>
-                                                <Grid item xs={12} sm container>
-                                                    <Typography variant="subtitle2" gutterBottom>
+                                                <Grid item xs={12} sm container alignItems="center">
+                                                    <Typography variant="subtitle2" sx={{mr:'5px'}}>
                                                         {list.name}
                                                     </Typography>
+                                                    {list.role ? <ManageAccountsIcon color='primary' fontSize='small'/> : ''}
                                                 </Grid>
                                             </Grid>
                                         </TableCell>
                                         <TableCell style={{ width: 120 }} align="left">
-                                            {list.phone}
+                                            0{list.phone}
                                         </TableCell>
                                         <TableCell style={{ width: 120 }} align="left">
                                             {list.email}
                                         </TableCell>
-                                        {/* <TableCell style={{ width: 120 }} align="left" >
-                                            <Stack direction="row" alignItems="center" spacing={1} sx={() => { if (list.status == 1) { return { color: 'rgb(39, 171, 110)' } } else { return { color: 'rgb(217, 130, 43)' } } }}>
-                                                <FiberManualRecordIcon sx={{ fontSize: 12 }} />
-                                                <Typography>{list.status ? 'Published' : 'Draft'}</Typography>
-                                            </Stack>
-                                        </TableCell> */}
                                         <TableCell style={{ width: 80 }} align="right">
                                             <Stack alignItems="center" direction="row">
                                                 <Tooltip title="Edit">
@@ -189,30 +184,20 @@ export default function Customers(props) {
                                         <TableCell component="th" scope="row">
                                             <Grid container spacing={2} alignItems="center">
                                                 <Grid item>
-                                                    <Img alt="complex" sx={{ width: 70, height: 70, borderRadius: '10px' }} src={`http://localhost:4000/api/product/photo/${list._id}`} />
+                                                    <Avatar {...stringAvatar(list.name)} />
                                                 </Grid>
                                                 <Grid item xs={12} sm container>
-                                                    <Grid item xs container direction="column" spacing={2}>
-                                                        <Grid item xs>
-                                                            <Typography variant="subtitle2" gutterBottom>
-                                                                {list.name}
-                                                            </Typography>
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                Sold out: {list.sold}
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
+                                                    <Typography variant="subtitle2" >
+                                                        {list.name}
+                                                    </Typography>
                                                 </Grid>
                                             </Grid>
                                         </TableCell>
                                         <TableCell style={{ width: 120 }} align="left">
-                                            {list.price}
+                                            {list.phone}
                                         </TableCell>
-                                        <TableCell style={{ width: 120 }} align="left" >
-                                            <Stack direction="row" alignItems="center" spacing={1} sx={() => { if (list.status == 1) { return { color: 'rgb(39, 171, 110)' } } else { return { color: 'rgb(217, 130, 43)' } } }}>
-                                                <FiberManualRecordIcon sx={{ fontSize: 12 }} />
-                                                <Typography>{list.status ? 'Published' : 'Draft'}</Typography>
-                                            </Stack>
+                                        <TableCell style={{ width: 120 }} align="left">
+                                            {list.email}
                                         </TableCell>
                                         <TableCell style={{ width: 80 }} align="right">
                                             <Stack alignItems="center" direction="row">
@@ -286,30 +271,20 @@ export default function Customers(props) {
                                         <TableCell component="th" scope="row">
                                             <Grid container spacing={2} alignItems="center">
                                                 <Grid item>
-                                                    <Img alt="complex" sx={{ width: 70, height: 70, borderRadius: '10px' }} src={`http://localhost:4000/api/product/photo/${list._id}`} />
+                                                    <Avatar {...stringAvatar(list.name)} />
                                                 </Grid>
                                                 <Grid item xs={12} sm container>
-                                                    <Grid item xs container direction="column" spacing={2}>
-                                                        <Grid item xs>
-                                                            <Typography variant="subtitle2" gutterBottom>
-                                                                {list.name}
-                                                            </Typography>
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                Sold out: {list.sold}
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
+                                                    <Typography variant="subtitle2" >
+                                                        {list.name}
+                                                    </Typography>
                                                 </Grid>
                                             </Grid>
                                         </TableCell>
                                         <TableCell style={{ width: 120 }} align="left">
-                                            {list.price}
+                                            {list.phone}
                                         </TableCell>
-                                        <TableCell style={{ width: 120 }} align="left" >
-                                            <Stack direction="row" alignItems="center" spacing={1} sx={() => { if (list.status == 1) { return { color: 'rgb(39, 171, 110)' } } else { return { color: 'rgb(217, 130, 43)' } } }}>
-                                                <FiberManualRecordIcon sx={{ fontSize: 12 }} />
-                                                <Typography>{list.status ? 'Published' : 'Draft'}</Typography>
-                                            </Stack>
+                                        <TableCell style={{ width: 120 }} align="left">
+                                            {list.email}
                                         </TableCell>
                                         <TableCell style={{ width: 80 }} align="right">
                                             <Stack alignItems="center" direction="row">

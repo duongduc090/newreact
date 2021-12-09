@@ -8,7 +8,6 @@
   background-color: #F8F9FB !important
 }
 
-
 .social {
   font-size: 21px !important
 }
@@ -20,7 +19,10 @@
 footer {
   color: #caced1 !important;
   margin-top: 20px;
-}
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  }
 
 .list-unstyled li {
   margin-top: 20px;
@@ -33,9 +35,14 @@ footer {
 }
 
 .row-1 {
-  background-color: #1E242A !important
+  background-color: #1E242A !important;
+  width: 100%;
 }
 
 .row-2 {
-  background-color: #28323C !important
+  background-color: #28323C !important;
+  width: 100%;
+}
+.row{
+  margin: 0!important;
 }

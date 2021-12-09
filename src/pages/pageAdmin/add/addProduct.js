@@ -15,13 +15,16 @@ import { useForm } from 'react-hook-form'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schemaProduct } from '../../../validate/Schema';
 
 const theme = createTheme();
 
-export default function AddProduct({onAdd, categories}) {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+export default function AddProduct({ onAdd, categories }) {
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schemaProduct) });
     const [cate, setCate] = React.useState('');
+    let navigate = useNavigate()
 
     const handleChange = (event) => {
         setCate(event.target.value);
@@ -32,17 +35,21 @@ export default function AddProduct({onAdd, categories}) {
         const imgproduct = data.photo[0];
 
         const formData = new FormData();
-        
+
         formData.append('name', data.name);
         formData.append('price', data.price);
-        formData.append('photo',  imgproduct);
+        formData.append('photo', imgproduct);
         formData.append('category', cate);
         formData.append('quantity', data.quantity);
         formData.append('shipping', data.shipping);
         formData.append('description', data.description);
         formData.append('status', data.status);
-    
+
         onAdd(formData, user._id, token);
+        setTimeout(() => {
+            navigate('/admin/products')
+        }, 700)
+
     }
     return (
         <ThemeProvider theme={theme}>
@@ -70,6 +77,7 @@ export default function AddProduct({onAdd, categories}) {
                             autoFocus
                             {...register('name')}
                         />
+                        <Typography variant='caption' sx={{ color: 'red' }}>{errors.name?.message}</Typography>
                         <TextField
                             margin="normal"
                             fullWidth
@@ -79,15 +87,15 @@ export default function AddProduct({onAdd, categories}) {
                             autoComplete="price"
                             {...register('price')}
                         />
+                        <Typography variant='caption' sx={{ color: 'red' }}>{errors.price?.message}</Typography>
                         <TextField
                             margin="normal"
                             fullWidth
-                            id="photo"
                             type='file'
                             name="photo"
-                            autoComplete="photo"
                             {...register('photo')}
                         />
+                        {/* <Typography variant='caption' sx={{ color: 'red' }}>{errors.photo?.message}</Typography> */}
                         <FormControl fullWidth margin="normal">
                             <InputLabel id="demo-simple-select-label">Category</InputLabel>
                             <Select
@@ -97,7 +105,7 @@ export default function AddProduct({onAdd, categories}) {
                                 label="Category"
                                 onChange={handleChange}
                             >
-                                {categories.map((item,index) => {
+                                {categories.map((item, index) => {
                                     return <MenuItem value={item._id} key={index}>{item.name}</MenuItem>
                                 })}
                             </Select>
@@ -111,11 +119,12 @@ export default function AddProduct({onAdd, categories}) {
                             autoComplete="quantity"
                             {...register('quantity')}
                         />
-                        <FormControl component="fieldset" margin="normal">
+                        <Typography variant='caption' sx={{ color: 'red' }}>{errors.quantity?.message}</Typography>
+                        <FormControl component="fieldset" margin="normal" fullWidth>
                             <FormLabel component="legend">Shipping</FormLabel>
                             <RadioGroup row aria-label="shipping" name="shipping" defaultValue="0">
                                 <FormControlLabel value="1" control={<Radio />} label="Yes" autoComplete="1" {...register('shipping')} />
-                                <FormControlLabel value="0" control={<Radio />} label="No" autoComplete="0" {...register('shipping')}/>
+                                <FormControlLabel value="0" control={<Radio />} label="No" autoComplete="0" {...register('shipping')} />
                             </RadioGroup>
                         </FormControl>
                         <TextField
@@ -127,11 +136,12 @@ export default function AddProduct({onAdd, categories}) {
                             autoComplete="description"
                             {...register('description')}
                         />
-                        <FormControl component="fieldset" margin="normal">
+                        <Typography variant='caption' sx={{ color: 'red' }}>{errors.description?.message}</Typography>
+                        <FormControl component="fieldset" margin="normal" fullWidth>
                             <FormLabel component="legend">Publish</FormLabel>
                             <RadioGroup row aria-label="publish" name="publish" defaultValue="0">
                                 <FormControlLabel value="1" control={<Radio />} label="Yes" autoComplete="1" {...register('status')} />
-                                <FormControlLabel value="0" control={<Radio />} label="No" autoComplete="0" {...register('status')}/>
+                                <FormControlLabel value="0" control={<Radio />} label="No" autoComplete="0" {...register('status')} />
                             </RadioGroup>
                         </FormControl>
                         <Button
@@ -143,7 +153,7 @@ export default function AddProduct({onAdd, categories}) {
                             Add
                         </Button>
                         <NavLink to="/admin/products" style={{ textDecoration: 'none' }}>
-                            <Button variant="contained" fullWidth  style={{ marginBottom: 10 }}>
+                            <Button variant="contained" fullWidth style={{ marginBottom: 10 }}>
                                 List
                             </Button>
                         </NavLink>

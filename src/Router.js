@@ -49,10 +49,10 @@ const Routers = (props) => {
                     {/* <Route path="orders" element={<Orders/>} /> */}
                 </Route>
 
-                <Route path="/" element={<Client/>}>
+                <Route path="/*" element={<Client/>}>
                     <Route index element={<HomePage {...props}/>} />
                     <Route path="blog" element={<Blog/>} />
-                    <Route path="shop" element={<Shop {...props}/>} />
+                    <Route path="shop/:id" element={<Shop {...props}/>} />
                     <Route path="signup" element={<SignUp/>} />
                     <Route path="signin" element={<SignIn/>} />
                     <Route path="product/:id" element={<ProductDetail {...props}/>} />

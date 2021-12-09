@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { NavLink } from 'react-router-dom';
+import { Divider } from '@mui/material';
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -23,7 +24,7 @@ export default function Homepage(props) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <main>
+      <main style={{paddingBottom: '300px'}}>
         {/* Hero unit */}
         <Box
           sx={{
@@ -60,6 +61,47 @@ export default function Homepage(props) {
         </Box>
         <Container sx={{ px: 8 }} maxWidth="xl">
           {/* End hero unit */}
+          <Typography variant='h4'>Most New</Typography>
+          <Divider sx={{m:'10px 0', width: '100px'}}/>
+          <Grid container spacing={4}>
+            {props.productList.map((item, index) => (
+              <Grid item key={index} xs={12} sm={6} md={3}>
+                <Card sx={{ p: 3 }}>
+                  <NavLink to={`/product/${item._id}`} style={{ textDecoration: 'none' }}>
+                    <CardMedia
+                      component="img"
+                      alt="product img"
+                      height="200"
+                      image={`http://localhost:4000/api/product/photo/${item._id}`}
+                    />
+                  </NavLink>
+                  <CardContent>
+                    <NavLink to={`/product/${item._id}`} style={{ textDecoration: 'none', color: '#000000' }}>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {item.name}
+                      </Typography>
+                    </NavLink>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.description}
+                    </Typography>
+                  </CardContent>
+                  <CardActions component={<Grid container alignItems="center" />}>
+                    <Grid item xs={6} sx={{ paddingLeft: '10px' }}>
+                      Price
+                      <Typography component='h5' fontWeight='500'>$ {item.price}</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button variant="contained" size='medium' >
+                        Add to cart
+                      </Button>
+                    </Grid>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+          <Typography variant='h4' sx={{mt:'25px'}}>Popular</Typography>
+          <Divider sx={{m:'10px 0', width: '100px'}}/>
           <Grid container spacing={4}>
             {props.productList.map((item, index) => (
               <Grid item key={index} xs={12} sm={6} md={3}>

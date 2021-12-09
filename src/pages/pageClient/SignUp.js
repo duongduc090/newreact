@@ -1,10 +1,8 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,16 +12,40 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { signUp } from '../../auth';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { NavLink } from 'react-router-dom'
+import { schemaSignup } from '../../validate/Schema';
 
 const theme = createTheme();
 
 export default function SignUp() {
-  const {register, handleSubmit, formState: {errors} } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schemaSignup) });
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const onSubmit = (data) => {
     signUp(data)
+      .then(res => {
+        if (res.error) {
+          setError(res.error)
+        } else {
+          setError('');
+          setSuccess(true);
+        }
+      })
   };
-
+  const showSuccess = () => {
+    return (
+      <Box sx={{p: 1, width: '100%'}} style={{ display: success ? 'block' : 'none' }}>
+        <span>Sign up successfully. <NavLink to="/signin">Click here to Sign In</NavLink></span>
+      </Box>
+    )
+  }
+  const showError = () => {
+    return <Box sx={{p: 1, width: '100%', color: 'red'}} style={{ display: error ? 'block' : 'none' }}>
+        <span>{error}</span>
+      </Box>
+  }
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -42,34 +64,12 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+          {showSuccess()}
+          {showError()}
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              {/* <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  // {...register('firstname')}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                  // {...register('lastname')}
-                />
-              </Grid> */}
-               <Grid item xs={12}>
-                <TextField
-                  required
                   fullWidth
                   id="name"
                   label="Your Name"
@@ -77,10 +77,10 @@ export default function SignUp() {
                   autoComplete="name"
                   {...register('name')}
                 />
+                <Typography variant='caption' sx={{ color: 'red' }}>{errors.name?.message}</Typography>
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   id="email"
                   label="Email Address"
@@ -88,17 +88,17 @@ export default function SignUp() {
                   autoComplete="email"
                   {...register('email')}
                 />
+                <Typography variant='caption' sx={{ color: 'red' }}>{errors.email?.message}</Typography>
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   id="phone"
                   label="Phone"
                   name="phone"
-                  autoComplete="phone"
                   {...register('phone')}
                 />
+                <Typography variant='caption' sx={{ color: 'red' }}>{errors.phone?.message}</Typography>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -108,16 +108,10 @@ export default function SignUp() {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="new-password"
                   {...register('password')}
                 />
+                <Typography variant='caption' sx={{ color: 'red' }}>{errors.password?.message}</Typography>
               </Grid>
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -129,7 +123,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signin" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

@@ -17,7 +17,7 @@ import { Outlet } from 'react-router';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, Navigate } from 'react-router-dom'
 import { signOut } from '../auth';
 import {mdTheme, AppBar, stringAvatar, Drawer} from '../utils/compAdminLayout';
 
@@ -36,8 +36,16 @@ function DashboardContent() {
     setAnchorEl(null)
   };
   let navigate = useNavigate();
-
-  return (
+  const authen = JSON.parse(localStorage.getItem('auth'));
+  
+  if(!authen){
+     return <Navigate to="/signin"/> 
+  }else{
+      if(authen.user.role == 0 ){
+          return <Navigate to="/"/> 
+      }
+      else if(authen.user.role == 1){
+          return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -127,8 +135,8 @@ function DashboardContent() {
         </Box>
       </Box>
     </ThemeProvider>
-  );
-}
+  )
+}}}
 
 export default function Admin() {
   return <DashboardContent />;

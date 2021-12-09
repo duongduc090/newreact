@@ -14,35 +14,44 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { signIn, auth } from '../../auth';
 import { useNavigate } from 'react-router';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schemaSignin } from '../../validate/Schema';
+import { NavLink } from 'react-router-dom'
 
 const theme = createTheme();
 
 export default function SignIn() {
-  const {register, handleSubmit, formState: {errors} } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schemaSignin) });
   const [admin, setAdmin] = useState(false);
   let navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const onSubmit = (data) => {
     signIn(data)
-    .then( res => {
-      if(res.error){
-          console.log(res.data);
-      }else{
+      .then(res => {
+        if (res.error) {
+          setError(res.error)
+        } else {
           auth(res, () => {
             setAdmin(true);
-        })
-      }
-    })
+          })
+        }
+      })
   };
   const checkUser = () => {
     const auth = JSON.parse(localStorage.getItem('auth'));
-        if(admin){
-            if(auth.user.role == 1){
-                return navigate('/admin')
-            }else{
-                return navigate('/')
-            }
-        }
+    if (admin) {
+      if (auth.user.role == 1) {
+        return navigate('/admin')
+      } else {
+        return navigate('/')
+      }
+    }
+  }
+  const showError = () => {
+    return <Box sx={{p: 1, width: '100%', color: 'red'}} style={{ display: error ? 'block' : 'none' }}>
+        <span>{error}</span>
+      </Box>
   }
   return (
     <ThemeProvider theme={theme}>
@@ -62,7 +71,7 @@ export default function SignIn() {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5}  elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} elevation={6} square>
           <Box
             sx={{
               my: 8,
@@ -78,30 +87,33 @@ export default function SignIn() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
+            {showError()}
             {checkUser()}
             <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                {...register('email')}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                {...register('password')}
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoFocus
+                    sx={{width: '550px'}}
+                    {...register('email')}
+                  />
+                  <Typography variant='caption' sx={{ color: 'red' }}>{errors.email?.message}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    sx={{width: '550px'}}
+                    {...register('password')}
+                  />
+                  <Typography variant='caption' sx={{ color: 'red' }}>{errors.password?.message}</Typography>
+                </Grid>
+              </Grid>
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -117,13 +129,12 @@ export default function SignIn() {
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
-                    Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <NavLink to="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
-                  </Link>
+                  </NavLink>
                 </Grid>
               </Grid>
             </Box>

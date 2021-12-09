@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Routers from './Router';
@@ -6,12 +5,13 @@ import productApi from './api/productApi';
 import categoryApi from './api/categoryApi';
 import userApi from './api/userApi';
 import axios from 'axios'
+import ContactApi from './api/contactApi';
 
 function App() {
   const [products, setProduct] = useState([]);
   const [categories, setCategory] = useState([]);
   const [contact, setContact] = useState([]);
-  const [users, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const getTodos = async () => {
@@ -35,23 +35,31 @@ function App() {
     getTodos2();
     const getTodos3 = async () => {
       try {
-        const { data: contact } = await axios.get('http://localhost:4000/api/contacts')
-        setContact(contact.data)
+        const { data } = await ContactApi.getAll();
+        setContact(data.data)
       } catch (error) {
         console.log(error)
       }
     }
     getTodos3();
     const getTodos4 = async () => {
-    const { token, user } = JSON.parse(localStorage.getItem('auth'));
       try {
-        const { data: userdata } = await userApi.getAll(user._id,token);
-        setUser(userdata.data)
+        const { data: userdata } = await userApi.getAll();
+        setUsers(userdata.data)
       } catch (error) {
         console.log(error)
       }
     }
     getTodos4();
+    const getTodos5 = async () => {
+        try {
+          const { data: contacts } = await ContactApi.getAll();
+          setContact(contacts.data)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      getTodos5();
   }, [])
 
   const onHandleAdd = async (product, id, token) => {
@@ -73,6 +81,16 @@ function App() {
       console.log(error)
     }
   }
+  
+  const onHandleUpdateUser = async (id, user, iduser, token) => {
+    try {
+      await userApi.update(user, id, iduser, token);
+      const { data: newUsers } = await userApi.getAll(iduser, token);
+      setUsers(newUsers.data);
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const onHandleDelete = async (id, iduser, token) => {
     try {
@@ -86,10 +104,10 @@ function App() {
 
   const onHandleAdd2 = async (cate, id, token) => {
     try {
-      await categoryApi.add(cate, id, token);
+      const {data} = await categoryApi.add(cate, id, token);
       setCategory([
         ...categories,
-        cate
+        data
       ]);
     } catch (error) {
       console.log(error)
@@ -132,7 +150,7 @@ function App() {
     <div className="App">
       <Routers productList={products} onAdd={onHandleAdd} onAdd2={onHandleAdd2} categories={categories}
       editCate={onHandleUpdate2} editProduct={onHandleUpdate} onDelete2={onHandleDelete2} onDelete={onHandleDelete}
-      userList={users}/>
+      userList={users} updateUser={onHandleUpdateUser} contactList={contact} onHandleDelete3={onHandleDelete3}/>
     </div>
   );
 }
